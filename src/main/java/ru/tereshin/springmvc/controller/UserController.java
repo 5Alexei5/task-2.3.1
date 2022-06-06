@@ -10,8 +10,12 @@ import ru.tereshin.springmvc.service.UserService;
 @Controller
 public class UserController {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public String allUsers(Model model) {

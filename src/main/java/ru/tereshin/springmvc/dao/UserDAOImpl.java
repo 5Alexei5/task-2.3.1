@@ -5,6 +5,7 @@ import ru.tereshin.springmvc.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -25,13 +26,10 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void update(User user, long id) {
-        User userForUpdate = getUser(id);
-        entityManager.detach(userForUpdate);
-        userForUpdate.setName(user.getName());
-        userForUpdate.setSurName(user.getSurName());
-        userForUpdate.setAge(user.getAge());
 
-        entityManager.merge(userForUpdate);
+        user.setId(id);
+
+        entityManager.merge(user);
     }
 
     @Override
@@ -41,7 +39,9 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void deleteUser(long id) {
-        User user = getUser(id);
-        entityManager.remove(user);
+
+        Query query = entityManager.createQuery("delete from User u where u.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }
